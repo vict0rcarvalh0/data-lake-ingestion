@@ -20,8 +20,7 @@ def create_bucket_if_not_exists(bucket_name):
         minio_client.make_bucket(bucket_name)
         print(f"Bucket '{bucket_name}' criado com sucesso!")
 
-def upload_file(bucket_name, file_path):
-    file_name = os.path.basename(file_path)
+def upload_file(bucket_name, file_name, file_path):
     minio_client.fput_object(bucket_name, file_name, file_path)
     print(f"Arquivo '{file_name}' enviado com sucesso!")
 

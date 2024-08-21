@@ -13,6 +13,7 @@ pandas = "^2.2.2"
 pyarrow = "^17.0.0"
 minio = "^7.2.8"
 clickhouse-connect = "^0.7.18"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
