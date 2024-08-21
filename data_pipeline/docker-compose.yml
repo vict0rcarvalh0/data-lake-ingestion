@@ -22,6 +22,7 @@ services:
       - "8123:8123"
     volumes:
       - clickhouse_data:/var/lib/clickhouse
+      - ./users.xml:/etc/clickhouse-server/users.xml
     restart: always
 
 volumes:

@@ -5,14 +5,21 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from datetime import datetime
 import clickhouse_connect
+import requests
+import tempfile
+import os
 
 app = Flask(__name__)
 
 # Configuração do cliente MinIO
+MINIO_ENDPOINT = os.getenv('MINIO_ENDPOINT')
+MINIO_ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY')
+MINIO_SECRET_KEY = os.getenv('MINIO_SECRET_KEY')
+
 minio_client = Minio(
-    "localhost:9000",
-    access_key="minioadmin",
-    secret_key="minioadmin",
+    MINIO_ENDPOINT,
+    access_key=MINIO_ACCESS_KEY,
+    secret_key=MINIO_SECRET_KEY,
     secure=False
 )
 
@@ -22,10 +29,16 @@ if not minio_client.bucket_exists("raw-data"):
 
 # Função para executar o script SQL
 def execute_sql_script():
-    client = clickhouse_connect.get_client(host='localhost', port=8123)
+    client = clickhouse_connect.get_client(host='localhost', port=8123, username='default', password='admin')
     with open('sql/init_db.sql', 'r') as file:
         sql_script = file.read()
     client.command(sql_script)
+
+def create_custom_temp_dir():
+    temp_dir = "temporary"
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    return temp_dir
 
 @app.route('/data', methods=['POST'])
 def receive_data():
@@ -61,6 +74,55 @@ def receive_data():
     client.insert_df('working_data', df_parquet[['ingestion_date', 'line_data', 'tag']])
 
     return jsonify({"message": "Dados recebidos, armazenados e processados com sucesso"}), 200
+
+@app.route('/storage-pokemon-on-bucket/<name>', methods=['GET'])
+def get_pokemon(name):
+    # Requisição à PokeAPI
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{name}')
+    if response.status_code != 200:
+        return jsonify({"error": "Pokémon não encontrado"}), 404
+
+    pokemon_data = response.json()
+
+    # Criar DataFrame e salvar como Parquet
+    df = pd.DataFrame([{
+        'name': pokemon_data['name'],
+        'height': pokemon_data['height'],
+        'weight': pokemon_data['weight'],
+        'base_experience': pokemon_data['base_experience'],
+        'abilities': ', '.join([ability['ability']['name'] for ability in pokemon_data['abilities']])
+    }])
+
+    filename = f"raw_pokemon_{name.lower()}_{datetime.now().strftime('%Y%m%d%H%M%S')}.parquet"
+    temp_dir = create_custom_temp_dir()
+    temp_file_path = os.path.join(temp_dir, filename)
+    
+    # Salvar o DataFrame como Parquet no diretório temporário
+    table = pa.Table.from_pandas(df)
+    pq.write_table(table, temp_file_path)
+
+    # Fazer upload do arquivo JSON para o MinIO
+    minio_client.fput_object("raw-data", filename, temp_file_path)
+
+    return jsonify(pokemon_data), 200
+
+@app.route('/get-pokemon-from-bucket/<filename>', methods=['GET'])
+def get_pokemon_from_minio(filename):
+    temp_dir = create_custom_temp_dir()
+    temp_file_path = os.path.join(temp_dir, filename)
+
+    # Baixar o arquivo Parquet do MinIO
+    try:
+        minio_client.fget_object("raw-data", filename, f"{temp_file_path}")
+        df = pd.read_parquet(temp_file_path)
+        print("df:", df)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao acessar o arquivo Parquet: {str(e)}"}), 500
+
+    # Converter o DataFrame para JSON e retornar a resposta
+    pokemon_data = df.to_dict(orient='records')
+
+    return jsonify(pokemon_data), 200
 
 if __name__ == '__main__':
     execute_sql_script()
