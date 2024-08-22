@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from data_pipeline.minio_client import create_bucket_if_not_exists, upload_file, download_file
 from data_pipeline.clickhouse_client import get_client, insert_dataframe, execute_sql_script
-from data_pipeline.data_processing import process_data, prepare_dataframe_for_insert
+from data_pipeline.data_processing import process_data, prepare_dataframe_for_working
 from data_pipeline.data_ingestion import get_pokemon
 from utils.files import read_parquet
 from utils.folders import create_custom_temp_dir
@@ -23,12 +23,12 @@ def pokemon_pipeline(name):
     download_file("raw-data", filename, f"{temp_file_path}")
 
     df_parquet = read_parquet(temp_file_path)
-    df_parquet = prepare_dataframe_for_insert(df_parquet, 'pokemon_data')
+    df_parquet = prepare_dataframe_for_working(df_parquet, 'pokemon_data')
     print("DataFrame preparado com sucesso!")
 
     clickhouse_client = get_client()
     insert_dataframe(clickhouse_client, 'working_data', df_parquet)
-    print("Dados inseridos com sucesso!")
+    print("Dados inseridos na tabela working sucesso!")
 
     return jsonify({"message": "Dados recebidos, armazenados e processados com sucesso"}), 200
 
@@ -60,4 +60,5 @@ def get_pokemon_from_bucket(filename):
 
 if __name__ == '__main__':
     execute_sql_script('sql/init_db.sql')
+    execute_sql_script('sql/create_view.sql')
     app.run(host='0.0.0.0', port=5000)

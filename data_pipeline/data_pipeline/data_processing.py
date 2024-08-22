@@ -34,7 +34,7 @@ def process_data(data, name):
         print(f"Erro inesperado ao processar os dados do Pokémon {name}: {e}")
         raise RuntimeError(f"Erro ao processar os dados do Pokémon {name}") from e
 
-def prepare_dataframe_for_insert(df, tag):
+def prepare_dataframe_for_working(df, tag):
     try:
         df['ingestion_date'] = datetime.now()
         df['line_data'] = df.apply(lambda row: row.to_json(), axis=1)

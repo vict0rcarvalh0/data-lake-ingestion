@@ -18,6 +18,7 @@ def get_client():
             password=CLICKHOUSE_PASSWORD
         )
         return client
+    
     except Exception as e:
         print(f"Erro ao conectar ao ClickHouse: {str(e)}")
         raise ConnectionError("Não foi possível conectar ao ClickHouse") from e
@@ -29,6 +30,7 @@ def execute_sql_script(script_path):
             sql_script = file.read()
         client.command(sql_script)
         return client
+    
     except FileNotFoundError as e:
         print(f"Arquivo SQL não encontrado: {str(e)}")
         raise FileNotFoundError(f"O arquivo {script_path} não foi encontrado") from e
@@ -39,6 +41,7 @@ def execute_sql_script(script_path):
 def insert_dataframe(client, table_name, df):
     try:
         client.insert_df(table_name, df)
+
     except Exception as e:
         print(f"Erro ao inserir dataframe na tabela {table_name}: {str(e)}")
         raise RuntimeError(f"Falha ao inserir dados na tabela {table_name}") from e

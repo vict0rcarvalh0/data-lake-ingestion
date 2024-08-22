@@ -24,6 +24,22 @@ services:
       - clickhouse_data:/var/lib/clickhouse
       - ./users.xml:/etc/clickhouse-server/users.xml
     restart: always
+  
+  flask-app:
+    build: .
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - MINIO_ENDPOINT=minio:9000
+      - CLICKHOUSE_HOST=clickhouse
+    depends_on:
+      - minio
+      - clickhouse
+    volumes:
+      - .:/app
+    restart: always
 
 volumes:
   minio_data:
