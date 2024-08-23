@@ -14,6 +14,8 @@ pyarrow = "^17.0.0"
 minio = "^7.2.8"
 clickhouse-connect = "^0.7.18"
 python-dotenv = "^1.0.1"
+pytest = "^8.3.2"
+pytest-mock = "^3.14.0"
 
 
 [build-system]
