@@ -14,6 +14,10 @@ docker compose up --build
 - Open <a href="http://localhost:8123/">http://localhost:8123/</a> to check Clickhouse health.
 - Open <a href="http://localhost:5601/">http://localhost:5601/</a> to access ElasticSearch and Kibana to check logging.
 
+<p align="center">
+  <img src="assets/elastic.png" width="80%">
+</p>
+
 After that, test the data pipeline by executing the GET endpoint http://localhost:5000/pokemon/pipeline/<pokemon_name> on Postman.
 <p align="center">
   <img src="assets/endpoint.png" width="80%">
