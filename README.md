@@ -28,6 +28,20 @@ If you want to connect Clickhouse on your Database Tool(e.g: DBeaver), follow th
   <img src="assets/database.png" width="80%">
 </p>
 
+# How to run the tests
+
+> [!IMPORTANT]
+> You need to have Python 3.12.4 and Poetry installed to run the tests project
+
+```shell
+cd data-lake-ingestion/data_pipeline
+
+poetry run pytest
+```
+<p align="center">
+  <img src="assets/database.png" width="80%">
+</p>
+
 ## [Optional]
 
 > [!IMPORTANT]
