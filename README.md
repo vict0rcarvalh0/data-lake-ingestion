@@ -5,7 +5,7 @@
 ```shell
 git clone https://github.com/vict0rcarvalh0/data-lake-ingestion.git
 
-cd data-lake-ingestion/data_pipeline
+cd data-lake-ingestion/src
 
 docker compose up --build
 ```
@@ -34,7 +34,7 @@ If you want to connect Clickhouse on your Database Tool(e.g: DBeaver), follow th
 > You need to have Python 3.12.4 and Poetry installed to run the tests project
 
 ```shell
-cd data-lake-ingestion/data_pipeline
+cd data-lake-ingestion/src
 
 poetry run pytest
 ```
@@ -50,7 +50,7 @@ poetry run pytest
 You can also run Streamlit App in another terminal to check it out the Pokemón Dashboard!
 
 ```shell
-cd data-lake-ingestion/data_pipeline/streamlit_app
+cd data-lake-ingestion/src/streamlit_app
 
 poetry install --no-cache
 
