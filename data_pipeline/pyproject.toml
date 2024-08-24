@@ -16,6 +16,11 @@ clickhouse-connect = "^0.7.18"
 python-dotenv = "^1.0.1"
 pytest = "^8.3.2"
 pytest-mock = "^3.14.0"
+json-log-formatter = "^1.0"
+streamlit = "^1.37.1"
+matplotlib = "^3.9.2"
+seaborn = "^0.13.2"
+altair = "^5.4.0"
 
 
 [build-system]
