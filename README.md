@@ -38,3 +38,7 @@ poetry install --no-cache
 
 poetry run streamlit run ./app.py
 ```
+
+<p align="center">
+  <img src="assets/streamlit.png" width="80%">
+</p>
