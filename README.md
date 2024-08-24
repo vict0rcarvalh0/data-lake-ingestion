@@ -36,6 +36,8 @@ If you want to connect Clickhouse on your Database Tool(e.g: DBeaver), follow th
 ```shell
 cd data-lake-ingestion/src
 
+poetry install --no-cache
+
 poetry run pytest
 ```
 <p align="center">

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "data-pipeline"
+name = "src"
 version = "0.1.0"
 description = ""
 authors = ["vict0rcarvalh0 <victordecarvalho342@gmail.com>"]
