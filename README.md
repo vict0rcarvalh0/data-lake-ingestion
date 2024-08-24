@@ -39,7 +39,7 @@ cd data-lake-ingestion/data_pipeline
 poetry run pytest
 ```
 <p align="center">
-  <img src="assets/database.png" width="80%">
+  <img src="assets/tests.png" width="80%">
 </p>
 
 ## [Optional]
