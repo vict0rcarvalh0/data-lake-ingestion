@@ -16,12 +16,12 @@ docker compose up --build
 
 After that, test the data pipeline by executing the GET endpoint http://localhost:5000/pokemon/pipeline/<pokemon_name> on Postman.
 <p align="center">
-  <img src="" width="80%">
+  <img src="assets/endpoint.png" width="80%">
 </p>
 
 If you want to connect Clickhouse on your Database Tool(e.g: DBeaver), follow the example:
 <p align="center">
-  <img src="" width="80%">
+  <img src="assets/database.png" width="80%">
 </p>
 
 ## [Optional]
